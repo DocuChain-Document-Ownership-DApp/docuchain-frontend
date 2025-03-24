@@ -3,13 +3,15 @@ import {Card} from "@/components/ui/card.tsx";
 
 const HomePage = () => {
     return (
-        <div className="flex flex-col gap-4 w-full">
-            <Card className="p-4 shadow-none bg-[#162660] z-1">
+        <div className="flex flex-col">
+            <Card className="p-4 py-30 shadow-none bg-[#D0E6FD] w-full z-1">
                 <em>
-                    <h1 className="font-serif text-neutral-100">Welcome to the New Age of Document Storage</h1>
+                    <h1 className="font-serif text-center text-[#162660]">
+                        Welcome to the New Age of Document Storage
+                    </h1>
                 </em>
             </Card>
-            <Card className="p-4 z-1 bg-transparent backdrop-blur-sm">
+            <Card className="p-4 mt-4 bg-transparent backdrop-blur-sm shadow-none">
                 <DocumentIssueContainer/>
             </Card>
         </div>

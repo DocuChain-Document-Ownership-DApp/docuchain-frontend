@@ -272,7 +272,7 @@ export function SignupForm({connectMetaMask, onSubmit, isSubmitting}: SignupForm
                     <FormControl>
                         <Input
                             type="file"
-                            accept="image/*"
+                            accept=".jpg, .jpeg"
                             ref={fileRefs.photo}
                             onChange={(e) => {
                                 if (e.target.files?.[0]) {

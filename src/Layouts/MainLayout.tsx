@@ -8,7 +8,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({children}: MainLayoutProps) => {
 
     return (
-        <div className="p-4">
+        <div className="p-4 w-screen">
             <AppNavBar/>
             <main>{children}</main>
         </div>
