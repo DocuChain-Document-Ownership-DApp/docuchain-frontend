@@ -15,13 +15,13 @@ const SignUpPage = () => {
                 />e
             </div>
             <div className="grid grid-cols-12 min-h-screen items-center z-2 relative">
-                <div className="col-span-6 col-start-2 text-left">
+                <div className="col-span-4 col-start-2 text-left">
                     <em>
                         <p className="font-serif text-7xl leading text-[#162660]">
                             Revolutionizing
                         </p>
                         <RotatingText
-                            texts={['Document', 'Intellectual Property', 'Registry', 'Medical Records']}
+                            texts={['Document', 'Registry']}
                             mainClassName="overflow-hidden py-0.5 sm:py-1 md:py-2"
                             staggerFrom={"last"}
                             initial={{y: "100%"}}
@@ -38,7 +38,7 @@ const SignUpPage = () => {
                         </p>
                     </em>
                 </div>
-                <div className="col-span-3 col-start-9">
+                <div className="col-span-5 col-start-7">
                     <Card className="min-w-md backdrop-blur-sm bg-transparent shadow-none">
                         <CardHeader className="text-center">
                             <CardTitle className="text-xl font-[montserrat]">Join the Revolution</CardTitle>

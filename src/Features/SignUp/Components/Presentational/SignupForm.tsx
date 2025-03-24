@@ -2,8 +2,7 @@ import React from 'react';
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {format} from "date-fns";
-import {CalendarIcon} from "lucide-react";
+import {Link} from "lucide-react";
 
 import {Button} from "@/components/ui/button";
 import {
@@ -15,14 +14,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Calendar} from "@/components/ui/calendar";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import {cn} from "@/lib/utils";
 
 // Modified schema to use Date for dob
 const signupFormSchema = z.object({
@@ -31,9 +22,10 @@ const signupFormSchema = z.object({
     email: z.string().email({message: 'Invalid email format'}),
     phone: z.string().regex(/^\+[0-9]{1,15}$/, {message: 'Phone must start with + followed by numbers'}),
     uid: z.string().min(1, {message: 'UID is required'}),
-    dob: z.date({
-        required_error: "Date of birth is required",
-    }),
+    // dob: z.date({
+    //     required_error: "Date of birth is required",
+    // }),
+    dob: z.string().regex(/^\d{2}\/\d{2}\/\d{4}$/, {message: 'Date must be in format DD/MM/YYYY'}),
     role: z.coerce.number().int().positive(),
     photo: z.instanceof(File, {message: 'Photo must be a file'}).nullable().optional(),
     idDocument: z.instanceof(File, {message: 'ID Document must be a file'}).nullable().optional(),
@@ -112,31 +104,7 @@ export function SignupForm({connectMetaMask, onSubmit, isSubmitting}: SignupForm
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmitForm)} className="space-y-6" noValidate>
-                <FormField
-                    control={form.control}
-                    name="walletAddress"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>Wallet Address</FormLabel>
-                            <div className="flex">
-                                <FormControl>
-                                    <Input {...field} placeholder="0x..."/>
-                                </FormControl>
-                                <Button
-                                    type="button"
-                                    variant="secondary"
-                                    className="ml-2 bg-orange-600 text-white hover:bg-orange-700"
-                                    onClick={handleConnectMetaMask}
-                                >
-                                    Connect MetaMask
-                                </Button>
-                            </div>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-
+            <form onSubmit={form.handleSubmit(handleSubmitForm)} className="grid grid-cols-2 gap-6" noValidate>
                 <FormField
                     control={form.control}
                     name="name"
@@ -150,6 +118,32 @@ export function SignupForm({connectMetaMask, onSubmit, isSubmitting}: SignupForm
                         </FormItem>
                     )}
                 />
+
+                <FormField
+                    control={form.control}
+                    name="walletAddress"
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel>Wallet Address</FormLabel>
+                            <div className="flex">
+                                <FormControl>
+                                    <Input {...field} placeholder="0x..."/>
+                                </FormControl>
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                    className="ml-2 text-white bg-[#D0E6FD] text-[#162660]"
+                                    onClick={handleConnectMetaMask}
+                                >
+                                    <Link/>
+                                    Link
+                                </Button>
+                            </div>
+                            <FormMessage/>
+                        </FormItem>
+                    )}
+                />
+
 
                 <FormField
                     control={form.control}
@@ -193,67 +187,81 @@ export function SignupForm({connectMetaMask, onSubmit, isSubmitting}: SignupForm
                     )}
                 />
 
+                {/*<FormField*/}
+                {/*    control={form.control}*/}
+                {/*    name="dob"*/}
+                {/*    render={({field}) => (*/}
+                {/*        <FormItem className="flex flex-col">*/}
+                {/*            <FormLabel>Date of Birth</FormLabel>*/}
+                {/*            <Popover>*/}
+                {/*                <PopoverTrigger asChild>*/}
+                {/*                    <FormControl>*/}
+                {/*                        <Button*/}
+                {/*                            variant="outline"*/}
+                {/*                            className={cn(*/}
+                {/*                                "w-full pl-3 text-left font-normal",*/}
+                {/*                                !field.value && "text-muted-foreground"*/}
+                {/*                            )}*/}
+                {/*                        >*/}
+                {/*                            {field.value ? (*/}
+                {/*                                format(field.value, "PPP")*/}
+                {/*                            ) : (*/}
+                {/*                                <span>Pick a date</span>*/}
+                {/*                            )}*/}
+                {/*                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>*/}
+                {/*                        </Button>*/}
+                {/*                    </FormControl>*/}
+                {/*                </PopoverTrigger>*/}
+                {/*                <PopoverContent className="w-auto p-0" align="start">*/}
+                {/*                    <Calendar*/}
+                {/*                        mode="single"*/}
+                {/*                        selected={field.value}*/}
+                {/*                        onSelect={field.onChange}*/}
+                {/*                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}*/}
+                {/*                        initialFocus*/}
+                {/*                    />*/}
+                {/*                </PopoverContent>*/}
+                {/*            </Popover>*/}
+                {/*            <FormMessage/>*/}
+                {/*        </FormItem>*/}
+                {/*    )}*/}
+                {/*/>*/}
+
+                {/*<FormField*/}
+                {/*    control={form.control}*/}
+                {/*    name="role"*/}
+                {/*    render={({field}) => (*/}
+                {/*        <FormItem>*/}
+                {/*            <FormLabel>Role</FormLabel>*/}
+                {/*            <Select*/}
+                {/*                onValueChange={(value) => field.onChange(parseInt(value))}*/}
+                {/*                defaultValue={field.value?.toString()}*/}
+                {/*            >*/}
+                {/*                <FormControl>*/}
+                {/*                    <SelectTrigger>*/}
+                {/*                        <SelectValue placeholder="Select a role"/>*/}
+                {/*                    </SelectTrigger>*/}
+                {/*                </FormControl>*/}
+                {/*                <SelectContent>*/}
+                {/*                    <SelectItem value="1">Role 1</SelectItem>*/}
+                {/*                    <SelectItem value="2">Role 2</SelectItem>*/}
+                {/*                    <SelectItem value="3">Role 3</SelectItem>*/}
+                {/*                </SelectContent>*/}
+                {/*            </Select>*/}
+                {/*            <FormMessage/>*/}
+                {/*        </FormItem>*/}
+                {/*    )}*/}
+                {/*/>*/}
+
                 <FormField
                     control={form.control}
                     name="dob"
                     render={({field}) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Date of Birth</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant="outline"
-                                            className={cn(
-                                                "w-full pl-3 text-left font-normal",
-                                                !field.value && "text-muted-foreground"
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, "PPP")
-                                            ) : (
-                                                <span>Pick a date</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="role"
-                    render={({field}) => (
                         <FormItem>
-                            <FormLabel>Role</FormLabel>
-                            <Select
-                                onValueChange={(value) => field.onChange(parseInt(value))}
-                                defaultValue={field.value?.toString()}
-                            >
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a role"/>
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="1">Role 1</SelectItem>
-                                    <SelectItem value="2">Role 2</SelectItem>
-                                    <SelectItem value="3">Role 3</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <FormLabel>Date of Birth (DD/MM/YYYY)</FormLabel>
+                            <FormControl>
+                                <Input {...field} placeholder="DD/MM/YYYY"/>
+                            </FormControl>
                             <FormMessage/>
                         </FormItem>
                     )}
@@ -295,7 +303,7 @@ export function SignupForm({connectMetaMask, onSubmit, isSubmitting}: SignupForm
 
                 <Button
                     type="submit"
-                    className="w-full py-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300"
+                    className="w-full col-span-2 py-6 bg-[#162660]"
                     disabled={isSubmitting}
                 >
                     {isSubmitting ? 'Submitting...' : 'Sign Up'}

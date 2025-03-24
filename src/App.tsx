@@ -5,10 +5,10 @@ import {Toaster} from "sonner";
 function App() {
 
     return (
-        <>
+        <div className="font-[montserrat]">
             <AppRoutes/>
             <Toaster/>
-        </>
+        </div>
     )
 }
 
