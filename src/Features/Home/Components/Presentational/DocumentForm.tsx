@@ -7,6 +7,7 @@ import {Button} from '@/components/ui/button';
 import {Checkbox} from '@/components/ui/checkbox';
 import {UseFormReturn} from 'react-hook-form';
 import {DocumentFormData} from "@/Features/Home/Types/DocumentTypes.ts";
+import {SquarePlus} from "lucide-react";
 
 interface DocumentFormProps {
     formMethods: UseFormReturn<DocumentFormData>;
@@ -32,7 +33,7 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({formMethods, onSubmit
                                 <Input
                                     type="file"
                                     onChange={(e) => field.onChange(e.target.files?.[0])}
-                                    ref={fileInputRef} // Attach the ref to the file input
+                                    ref={fileInputRef}
                                 />
                             </FormControl>
                             <FormMessage/>
@@ -40,7 +41,6 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({formMethods, onSubmit
                     )}
                 />
 
-                {/* Recipient Address */}
                 <FormField
                     control={control}
                     name="recipientAddress"
@@ -55,7 +55,6 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({formMethods, onSubmit
                     )}
                 />
 
-                {/* Checkbox */}
                 <FormField
                     control={control}
                     name="forMe"
@@ -70,8 +69,10 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({formMethods, onSubmit
                     )}
                 />
 
-                {/* Submit Button */}
-                <Button type="submit" className="bg-[#162660]">Submit</Button>
+                <Button type="submit" className="bg-[#162660]">
+                    <SquarePlus/>
+                    Add Document
+                </Button>
             </form>
         </Form>
     );

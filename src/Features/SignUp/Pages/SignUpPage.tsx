@@ -44,7 +44,6 @@ const SignUpPage = () => {
                             <CardTitle className="text-xl font-[montserrat]">Join the Revolution</CardTitle>
                         </CardHeader>
                         <CardContent>
-
                             <SignupContainer/>
                         </CardContent>
                     </Card>

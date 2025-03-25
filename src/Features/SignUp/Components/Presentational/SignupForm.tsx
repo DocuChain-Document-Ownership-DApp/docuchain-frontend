@@ -2,7 +2,7 @@ import React from 'react';
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {Link} from "lucide-react";
+import {Link, LoaderCircle, UserRoundPlus} from "lucide-react";
 
 import {Button} from "@/components/ui/button";
 import {
@@ -303,9 +303,10 @@ export function SignupForm({connectMetaMask, onSubmit, isSubmitting}: SignupForm
 
                 <Button
                     type="submit"
-                    className="w-full col-span-2 py-6 bg-[#162660]"
+                    className="w-full col-span-2 bg-[#162660]"
                     disabled={isSubmitting}
                 >
+                    {isSubmitting ? <LoaderCircle className="animate-spin"/> : <UserRoundPlus/>}
                     {isSubmitting ? 'Submitting...' : 'Sign Up'}
                 </Button>
             </form>

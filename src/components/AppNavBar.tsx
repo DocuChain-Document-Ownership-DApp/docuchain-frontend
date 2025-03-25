@@ -1,4 +1,4 @@
-import {Box, Home, Info, LogOut} from "lucide-react";
+import {Box, Home, Info, LogOut, Signature, UserRoundIcon} from "lucide-react";
 import {Card} from "@/components/ui/card.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Button} from "@/components/ui/button.tsx";
@@ -12,14 +12,16 @@ const AppNavBar = () => {
 
     const items = [
         {icon: <Home size={18}/>, label: 'Home', url: '/home'},
-        {icon: <Info size={18}/>, label: 'Info', url: '/info'},
+        {icon: <Signature size={18}/>, label: 'My Docs', url: '/'},
+        {icon: <UserRoundIcon size={18}/>, label: 'Profile', url: '/'},
+        {icon: <Info size={18}/>, label: 'About Us', url: '/'},
     ];
 
     return (
         <>
             <Card
-                className="flex flex-row rounded-2xl shadow-none absolute top-4 left-4 right-4 gap-2 p-2 backdrop-blur-sm bg-transparent items-center justify-between border-none z-1">
-                <div className="flex flex-row px-2 gap-2">
+                className="flex flex-row rounded-2xl select-none shadow-none absolute top-4 left-4 right-4 gap-2 p-2 backdrop-blur-sm bg-transparent items-center justify-between border-none z-1">
+                <div className="flex flex-row px-2 gap-2" onClick={() => Navigate("/")}>
                     <Box/>
                     <h3 className="font-[montserrat] font-medium ">
                         DocuChain
@@ -31,15 +33,16 @@ const AppNavBar = () => {
                                 onClick={() => {
                                     Navigate(item.url)
                                 }}
-                                className={Location.pathname == item.url ? "bg-[#162660]" : "bg-transparent text-[#162660] shadow-none"}>
+                                className={Location.pathname == item.url ? "bg-[#162660] rounded-full" : "bg-transparent text-[#162660] shadow-none rounded-full"}>
                             {item.icon}
                             {item.label}
                         </Button>
                     ))}
                 </div>
-                <Button className="bg-[#162660]" onClick={() => {
-                    dispatch(clearAuthData())
-                }}>
+                <Button className="bg-transparent shadow-none backdrop-blur-sm text-[#162660] rounded-full"
+                        onClick={() => {
+                            dispatch(clearAuthData())
+                        }}>
                     <LogOut/>
                     Log Out
                 </Button>
