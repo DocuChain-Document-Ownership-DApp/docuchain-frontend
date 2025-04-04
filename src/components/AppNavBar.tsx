@@ -12,7 +12,7 @@ const AppNavBar = () => {
 
     const items = [
         {icon: <Home size={18}/>, label: 'Home', url: '/home'},
-        {icon: <Signature size={18}/>, label: 'My Docs', url: '/'},
+        {icon: <Signature size={18}/>, label: 'My Docs', url: '/docs'},
         {icon: <UserRoundIcon size={18}/>, label: 'Profile', url: '/'},
         {icon: <Info size={18}/>, label: 'About Us', url: '/'},
     ];
@@ -33,7 +33,7 @@ const AppNavBar = () => {
                                 onClick={() => {
                                     Navigate(item.url)
                                 }}
-                                className={Location.pathname == item.url ? "bg-[#162660] rounded-full" : "bg-transparent text-[#162660] shadow-none rounded-full"}>
+                                className={Location.pathname == item.url ? "": "bg-white text-[#162660] shadow-none rounded-full "}>
                             {item.icon}
                             {item.label}
                         </Button>

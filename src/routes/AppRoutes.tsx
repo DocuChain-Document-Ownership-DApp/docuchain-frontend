@@ -6,6 +6,7 @@ import MainLayout from "@/Layouts/MainLayout.tsx";
 import ProtectedRoute from "@/routes/ProtectedRoute.tsx";
 import HomePage from "@/Features/Home/Pages/Home.tsx";
 import SignUpPage from "@/Features/SignUp/Pages/SignUpPage.tsx";
+import DocsPage from "@/Features/Docs/Pages/DocsPage.tsx";
 
 const AppRoutes: React.FC = () => {
     return (<>
@@ -13,7 +14,8 @@ const AppRoutes: React.FC = () => {
                 <Routes>
                     <Route path="/signin" element={<SignInPage/>}/>
                     <Route path="/signup" element={<SignUpPage/>}/>
-                    <Route path="*" element={<SignInPage/>}/>
+                    <Route path="/docs"
+                           element={<ProtectedRoute><MainLayout><DocsPage/></MainLayout></ProtectedRoute>}/>
                     <Route path="/home"
                            element={<ProtectedRoute><MainLayout><HomePage/></MainLayout></ProtectedRoute>}/>
                 </Routes>

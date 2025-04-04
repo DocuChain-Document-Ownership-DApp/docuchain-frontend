@@ -24,6 +24,10 @@ export interface DocumentSearchParams {
     limit?: number;
 }
 
+export interface DocumentGetParams {
+    docId: string;
+}
+
 export const documentGetApi = createApi({
     reducerPath: 'documentGetApi',
     baseQuery: fetchBaseQuery({
@@ -45,7 +49,15 @@ export const documentGetApi = createApi({
                 body: params,
             }),
         }),
+        getDocument: builder.mutation<Blob, DocumentGetParams>({
+            query: (params) => ({
+                url: 'documents/get',
+                method: 'POST',
+                body: params,
+                responseHandler: (response) => response.blob(),
+            }),
+        }),
     }),
 });
 
-export const {useSearchDocumentsQuery} = documentGetApi;
+export const {useSearchDocumentsQuery, useGetDocumentMutation} = documentGetApi;

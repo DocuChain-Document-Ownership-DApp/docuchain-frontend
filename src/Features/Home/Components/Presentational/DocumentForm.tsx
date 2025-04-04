@@ -62,8 +62,10 @@ export const DocumentForm: React.FC<DocumentFormProps> = ({formMethods, onSubmit
                         <FormItem>
                             <FormLabel>For Me</FormLabel>
                             <FormControl>
-                                <Checkbox checked={field.value} onCheckedChange={field.onChange}
-                                          className="bg-transparent"/>
+                                <div>
+                                    <Checkbox checked={field.value} onCheckedChange={field.onChange}
+                                              className="justify justify-self-center"/>
+                                </div>
                             </FormControl>
                         </FormItem>
                     )}

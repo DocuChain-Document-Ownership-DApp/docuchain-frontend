@@ -14,7 +14,7 @@ interface DocumentsTableProps {
 
 export const DocumentsTable: React.FC<DocumentsTableProps> = ({documents}) => {
     return (
-        <ScrollArea className="h-40 rounded-md border">
+        <ScrollArea className="h-175 rounded-md border">
             <Table>
                 <TableHeader>
                     <TableRow>
