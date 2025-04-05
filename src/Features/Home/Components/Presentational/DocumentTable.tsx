@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {format} from 'date-fns';
-import {DocumentSearchResponse} from "@/Features/Home/API/documentGetAPI.ts";
+import {DocumentSearchResponse} from "@/Features/Docs/API/documentGetAPI.ts";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
 import {ScrollArea} from "@/components/ui/scroll-area.tsx";
 import {EllipsisVertical} from "lucide-react";

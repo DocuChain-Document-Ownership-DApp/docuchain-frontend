@@ -18,7 +18,7 @@ import {Button} from "@/components/ui/button";
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useSearchDocumentsQuery} from "@/Features/Home/API/documentGetAPI.ts";
+import {useSearchDocumentsQuery} from "@/Features/Docs/API/documentGetAPI.ts";
 import {DocumentsTable} from "@/Features/Home/Components/Presentational/DocumentTable.tsx";
 
 // Updated search schema to match API requirements

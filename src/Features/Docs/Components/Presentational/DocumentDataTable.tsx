@@ -5,7 +5,7 @@ import {
     ArrowUpNarrowWide,
     EllipsisVertical,
     Search, X,
-    Check, Filter, Download, Loader2
+    Check, Filter, Download, Loader2, Copy
 } from 'lucide-react';
 import {
     Table,
@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/popover";
 import {Badge} from "@/components/ui/badge";
 import {cn} from "@/lib/utils";
+import {toast} from "sonner";
 
 // Document interface definition
 interface Document {
@@ -390,11 +391,25 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                         ) : (
                             documents.map((doc) => (
                                 <TableRow key={doc.docId}>
-                                    <TableCell className="font-medium">
+                                    <TableCell className="font-medium flex items-center justify-between">
                                         {doc.docId}
+                                        <Button size="icon" variant="ghost"
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(doc.docId)
+                                                    toast.info("Document ID copied to clipboard")
+                                                }
+                                                }>
+                                            <Copy/>
+                                        </Button>
                                     </TableCell>
-                                    <TableCell>{doc.issuer.length > 15 ? `${doc.issuer.substring(0, 15)}...` : doc.issuer}</TableCell>
-                                    <TableCell>{doc.recipient.length > 15 ? `${doc.recipient.substring(0, 15)}...` : doc.recipient}</TableCell>
+                                    {doc.issuer == doc.recipient ?
+                                        (
+                                            <TableCell colSpan={2}><Badge className="w-full  bg-[#D0E6FD] text-accent-foreground ">Self Issued </Badge></TableCell>
+                                        ) : (<>
+                                            <TableCell>{doc.issuer.length > 15 ? `${doc.issuer.substring(0, 15)}...` : doc.issuer}</TableCell>
+                                            <TableCell>{doc.recipient.length > 15 ? `${doc.recipient.substring(0, 15)}...` : doc.recipient}</TableCell>
+                                        </>)
+                                    }
                                     <TableCell>
                                         {format(new Date(doc.createdAt), 'PPp')}
                                     </TableCell>
@@ -416,11 +431,11 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                                                 >
                                                     <span className="flex items-center">
                                                         {downloadingDocId === doc.docId ? (
-                                                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                            <Loader2 className="h-4 w-4 mr-2 animate-spin"/>
                                                         ) : (
-                                                            <Download className="h-4 w-4 mr-2" />
+                                                            <Download className="h-4 w-4 mr-2"/>
                                                         )}
-                                                        Download PDF
+                                                        Download Document
                                                     </span>
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>

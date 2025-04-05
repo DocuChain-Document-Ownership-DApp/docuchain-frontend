@@ -7,6 +7,7 @@ import ProtectedRoute from "@/routes/ProtectedRoute.tsx";
 import HomePage from "@/Features/Home/Pages/Home.tsx";
 import SignUpPage from "@/Features/SignUp/Pages/SignUpPage.tsx";
 import DocsPage from "@/Features/Docs/Pages/DocsPage.tsx";
+import TransferPage from "@/Features/Transfer/Pages/TransferPage.tsx";
 
 const AppRoutes: React.FC = () => {
     return (<>
@@ -18,6 +19,8 @@ const AppRoutes: React.FC = () => {
                            element={<ProtectedRoute><MainLayout><DocsPage/></MainLayout></ProtectedRoute>}/>
                     <Route path="/home"
                            element={<ProtectedRoute><MainLayout><HomePage/></MainLayout></ProtectedRoute>}/>
+                    <Route path="/transfer"
+                           element={<ProtectedRoute><MainLayout><TransferPage/></MainLayout></ProtectedRoute>}/>
                 </Routes>
             </Router>
             <Toaster/>

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {toast} from 'sonner';
-import {useSearchDocumentsQuery, useGetDocumentMutation} from "@/Features/Home/API/documentGetAPI.ts";
+import {useSearchDocumentsQuery, useGetDocumentMutation} from "@/Features/Docs/API/documentGetAPI.ts";
 import {DocumentsTable} from "@/Features/Docs/Components/Presentational/DocumentDataTable.tsx";
 
 export const DocumentContainer: React.FC = () => {

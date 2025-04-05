@@ -1,4 +1,4 @@
-import {Box, Home, Info, LogOut, Signature, UserRoundIcon} from "lucide-react";
+import {Box, Home, Info, LogOut, Send, Signature, UserRoundIcon} from "lucide-react";
 import {Card} from "@/components/ui/card.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Button} from "@/components/ui/button.tsx";
@@ -13,6 +13,7 @@ const AppNavBar = () => {
     const items = [
         {icon: <Home size={18}/>, label: 'Home', url: '/home'},
         {icon: <Signature size={18}/>, label: 'My Docs', url: '/docs'},
+        {icon: <Send size={18}/>, label: 'Transfer', url: '/transfer'},
         {icon: <UserRoundIcon size={18}/>, label: 'Profile', url: '/'},
         {icon: <Info size={18}/>, label: 'About Us', url: '/'},
     ];
@@ -33,7 +34,7 @@ const AppNavBar = () => {
                                 onClick={() => {
                                     Navigate(item.url)
                                 }}
-                                className={Location.pathname == item.url ? "": "bg-white text-[#162660] shadow-none rounded-full "}>
+                                className={Location.pathname == item.url ? "" : "bg-white text-[#162660] shadow-none rounded-full "}>
                             {item.icon}
                             {item.label}
                         </Button>
