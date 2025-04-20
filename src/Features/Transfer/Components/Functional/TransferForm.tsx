@@ -8,10 +8,10 @@ const TransferFormContainer = () => {
     const handleSubmit = async (values: TransferFormValues) => {
         try {
             await transferDocument(values).unwrap();
-            toast("Transfer Successful");
+            toast.success("Transfer Successful");
         } catch (error) {
             console.error("Transfer failed:", error);
-            toast("Transfer Failed");
+            toast.error("Transfer Failed");
         }
     };
 
