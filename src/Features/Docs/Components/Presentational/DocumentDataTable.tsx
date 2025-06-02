@@ -48,6 +48,7 @@ interface Document {
     recipient: string;
     createdAt: string;
     updatedAt: string;
+    doc_code: string;
 }
 
 // Component props interface
@@ -404,7 +405,9 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                                     </TableCell>
                                     {doc.issuer == doc.recipient ?
                                         (
-                                            <TableCell colSpan={2}><Badge className="w-full  bg-[#D0E6FD] text-accent-foreground ">Self Issued </Badge></TableCell>
+                                            <TableCell colSpan={2}><Badge
+                                                className="w-full  bg-[#D0E6FD] text-accent-foreground ">Self
+                                                Issued </Badge></TableCell>
                                         ) : (<>
                                             <TableCell>{doc.issuer.length > 15 ? `${doc.issuer.substring(0, 15)}...` : doc.issuer}</TableCell>
                                             <TableCell>{doc.recipient.length > 15 ? `${doc.recipient.substring(0, 15)}...` : doc.recipient}</TableCell>
@@ -440,6 +443,9 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
+                                    </TableCell>
+                                    <TableCell>
+                                        {doc.doc_code}
                                     </TableCell>
                                 </TableRow>
                             ))
