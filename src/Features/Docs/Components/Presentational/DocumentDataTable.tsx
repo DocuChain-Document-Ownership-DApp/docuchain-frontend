@@ -5,7 +5,7 @@ import {
     ArrowUpNarrowWide,
     EllipsisVertical,
     Search, X,
-    Check, Filter, Download, Loader2, Copy
+    Check, Filter, Loader2, Copy, Download
 } from 'lucide-react';
 import {
     Table,
@@ -40,6 +40,19 @@ import {
 import {Badge} from "@/components/ui/badge";
 import {cn} from "@/lib/utils";
 import {toast} from "sonner";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {
+    useGetDocumentClassesQuery,
+    DocumentClass,
+    DocumentClassesResponse,
+    useDownloadFile
+} from "@/Features/Docs/API/documentApi";
 
 // Document interface definition
 interface Document {
@@ -54,8 +67,6 @@ interface Document {
 // Component props interface
 interface DocumentsTableProps {
     documents: Document[];
-    onDownload: (docId: string) => Promise<void>;
-    isDownloading?: boolean;
 }
 
 // Filter option type
@@ -65,10 +76,10 @@ type FilterOption = {
 };
 
 export const DocumentsTable: React.FC<DocumentsTableProps> = ({
-                                                                  documents: initialDocuments,
-                                                                  onDownload,
-                                                                  isDownloading = false
-                                                              }) => {
+    documents: initialDocuments,
+}) => {
+    const {data: documentClassesData, isLoading: isLoadingDocumentClasses} = useGetDocumentClassesQuery();
+    const downloadFile = useDownloadFile();
     const [documents, setDocuments] = useState<Document[]>(initialDocuments);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filterColumns, setFilterColumns] = useState<string[]>([]);
@@ -76,7 +87,14 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
     const [scrollHeight, setScrollHeight] = useState<number>(500);
     const [open, setOpen] = useState(false);
-    const [downloadingDocId, setDownloadingDocId] = useState<string | null>(null);
+    const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+    const [documentDetails, setDocumentDetails] = useState<{
+        sector: string;
+        authority: string;
+        state?: string;
+        department: string;
+        document: DocumentClass;
+    } | null>(null);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -118,16 +136,6 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
     const getColumnDisplayName = (columnKey: string): string => {
         const option = filterOptions.find(opt => opt.value === columnKey);
         return option ? option.label : columnKey;
-    };
-
-    // Handle document download
-    const handleDownload = async (docId: string) => {
-        setDownloadingDocId(docId);
-        try {
-            await onDownload(docId);
-        } finally {
-            setDownloadingDocId(null);
-        }
     };
 
     // Handle search
@@ -229,18 +237,90 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
             <ArrowDownWideNarrow size={18} strokeWidth={1.75}/>;
     };
 
-    // Adjust input padding based on badges width
-    useEffect(() => {
-        if (searchInputRef.current && badgesContainerRef.current) {
-            const badgesWidth = badgesContainerRef.current.scrollWidth;
-            if (badgesWidth > 0) {
-                // Ensure there's enough space for text plus badges
-                searchInputRef.current.style.paddingRight = `${badgesWidth + 16}px`;
-            } else {
-                searchInputRef.current.style.paddingRight = '12px';
+    // Function to get document name from doc_code
+    const getDocumentName = (docCode: string): string => {
+        if (!documentClassesData) return docCode;
+
+        for (const [sectorName, sector] of Object.entries(documentClassesData.sectors)) {
+            for (const authority of sector.authorities) {
+                // Check in departments
+                if (authority.departments) {
+                    for (const dept of authority.departments) {
+                        const doc = dept.documents.find(d => d.code === docCode);
+                        if (doc) return doc.name;
+                    }
+                }
+                // Check in states
+                if (authority.states) {
+                    for (const state of authority.states) {
+                        for (const dept of state.departments) {
+                            const doc = dept.documents.find(d => d.code === docCode);
+                            if (doc) return doc.name;
+                        }
+                    }
+                }
             }
         }
-    }, [filterColumns]);
+        return docCode;
+    };
+
+    // Function to get document details
+    const getDocumentDetails = (docCode: string) => {
+        if (!documentClassesData) return null;
+
+        for (const [sectorName, sector] of Object.entries(documentClassesData.sectors)) {
+            for (const authority of sector.authorities) {
+                // Check in departments
+                if (authority.departments) {
+                    for (const dept of authority.departments) {
+                        const doc = dept.documents.find(d => d.code === docCode);
+                        if (doc) {
+                            return {
+                                sector: sectorName,
+                                authority: authority.name,
+                                department: dept.name,
+                                document: doc
+                            };
+                        }
+                    }
+                }
+                // Check in states
+                if (authority.states) {
+                    for (const state of authority.states) {
+                        for (const dept of state.departments) {
+                            const doc = dept.documents.find(d => d.code === docCode);
+                            if (doc) {
+                                return {
+                                    sector: sectorName,
+                                    authority: authority.name,
+                                    state: state.name,
+                                    department: dept.name,
+                                    document: doc
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    };
+
+    // Handle document selection
+    const handleDocumentSelect = (doc: Document) => {
+        setSelectedDocument(doc);
+        const details = getDocumentDetails(doc.doc_code);
+        setDocumentDetails(details);
+    };
+
+    const handleDownload = async (docId: string) => {
+        try {
+            await downloadFile(docId);
+            toast.success('Document downloaded successfully');
+        } catch (error) {
+            toast.error("Failed to download document");
+        }
+    };
 
     return (
         <div className="space-y-4" ref={containerRef}>
@@ -344,7 +424,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                                 onClick={() => handleSort('docId')}
                             >
                                 <div className="flex items-center justify-between w-full">
-                                    <span>Document ID</span> {renderSortIndicator('docId')}
+                                    <span>Document</span> {renderSortIndicator('docId')}
                                 </div>
                             </TableHead>
                             <TableHead
@@ -393,13 +473,15 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                             documents.map((doc) => (
                                 <TableRow key={doc.docId}>
                                     <TableCell className="font-medium flex items-center justify-between">
-                                        {doc.docId}
+                                        <div className="flex flex-col">
+                                            <span>{getDocumentName(doc.doc_code)}</span>
+                                            <span className="text-xs text-muted-foreground">{doc.docId}</span>
+                                        </div>
                                         <Button size="icon" variant="ghost"
                                                 onClick={() => {
-                                                    navigator.clipboard.writeText(doc.docId)
-                                                    toast.info("Document ID copied to clipboard")
-                                                }
-                                                }>
+                                                    navigator.clipboard.writeText(doc.docId);
+                                                    toast.info("Document ID copied to clipboard");
+                                                }}>
                                             <Copy/>
                                         </Button>
                                     </TableCell>
@@ -429,23 +511,14 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuItem
                                                     className="items-center justify-between font-semibold"
-                                                    onClick={() => handleDownload(doc.docId)}
-                                                    disabled={isDownloading || downloadingDocId === doc.docId}
+                                                    onClick={() => handleDocumentSelect(doc)}
                                                 >
                                                     <span className="flex items-center">
-                                                        {downloadingDocId === doc.docId ? (
-                                                            <Loader2 className="h-4 w-4 mr-2 animate-spin"/>
-                                                        ) : (
-                                                            <Download className="h-4 w-4 mr-2"/>
-                                                        )}
-                                                        Download Document
+                                                        View Details
                                                     </span>
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
-                                    </TableCell>
-                                    <TableCell>
-                                        {doc.doc_code}
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -453,6 +526,59 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                     </TableBody>
                 </Table>
             </ScrollArea>
+
+            {/* Document Details Dialog */}
+            <Dialog open={!!selectedDocument} onOpenChange={() => setSelectedDocument(null)}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Document Details</DialogTitle>
+                        <DialogDescription>
+                            Information about the selected document
+                        </DialogDescription>
+                    </DialogHeader>
+                    {documentDetails && (
+                        <>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <span className="font-medium">Sector</span>
+                                    <span className="col-span-3">{documentDetails.sector}</span>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <span className="font-medium">Authority</span>
+                                    <span className="col-span-3">{documentDetails.authority}</span>
+                                </div>
+                                {documentDetails.state && (
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <span className="font-medium">State</span>
+                                        <span className="col-span-3">{documentDetails.state}</span>
+                                    </div>
+                                )}
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <span className="font-medium">Department</span>
+                                    <span className="col-span-3">{documentDetails.department}</span>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <span className="font-medium">Document</span>
+                                    <span className="col-span-3">{documentDetails.document.name}</span>
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <span className="font-medium">Code</span>
+                                    <span className="col-span-3">{documentDetails.document.code}</span>
+                                </div>
+                            </div>
+                            <div className="flex justify-end mt-4">
+                                <Button
+                                    onClick={() => selectedDocument && handleDownload(selectedDocument.docId)}
+                                    className="bg-[#162660]"
+                                >
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Download Document
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

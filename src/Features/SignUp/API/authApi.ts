@@ -6,11 +6,23 @@ interface SignupResponse {
     processingTime: number;
 }
 
+interface VerifyEmailResponse {
+    messageId: string;
+    sent: boolean;
+}
+
 export const signUpAuthApi = createApi({
     reducerPath: 'signUpAuthApi',
     baseQuery: fetchBaseQuery({baseUrl: "http://localhost:3000"}),
     tagTypes: ['Auth'], // Define tag types
     endpoints: (builder) => ({
+        verifyEmail: builder.mutation<VerifyEmailResponse, { email: string }>({
+            query: (body) => ({
+                url: '/auth/verify-email',
+                method: 'POST',
+                body,
+            }),
+        }),
         signup: builder.mutation<SignupResponse, FormData>({
             query: (formData) => ({
                 url: '/auth/signup',
@@ -23,4 +35,4 @@ export const signUpAuthApi = createApi({
     }),
 });
 
-export const {useSignupMutation} = signUpAuthApi;
+export const {useSignupMutation, useVerifyEmailMutation} = signUpAuthApi;

@@ -45,7 +45,6 @@ export const DocumentIssueContainer: React.FC = () => {
     }, [forMe, walletAddress, setValue]);
 
 
-    
     // Reset dependent dropdowns when parent selection changes
     useEffect(() => {
         setSelectedAuthority('');
@@ -135,7 +134,7 @@ export const DocumentIssueContainer: React.FC = () => {
         <DocumentForm
             formMethods={formMethods}
             onSubmit={handleSubmit}
-            
+
             fileInputRef={fileInputRef}
             documentClassesData={documentClassesData}
             selectedSector={selectedSector}
