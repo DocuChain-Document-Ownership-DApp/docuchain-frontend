@@ -1,4 +1,4 @@
-import {Box, Home, Info, LogIn, LogOut, Send, Signature, UserRoundIcon} from "lucide-react";
+import {BadgeCheck, Box, Home, Info, LogIn, LogOut, Send, Signature} from "lucide-react";
 import {Card} from "@/components/ui/card.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Button} from "@/components/ui/button.tsx";
@@ -17,9 +17,10 @@ const AppNavBar = () => {
     const items = authToken ? [
         {icon: <Home size={18}/>, label: 'Home', url: '/home'},
         {icon: <Signature size={18}/>, label: 'My Docs', url: '/docs'},
-        {icon: <Send size={18}/>, label: 'Transfer', url: '/transfer'},
-        // {icon: <UserRoundIcon size={18}/>, label: 'Profile', url: '/profile'},
+        { icon: <Send size={18} />, label: 'Transfer', url: '/transfer' },
+        {icon:<BadgeCheck size={18}/>, label: 'Verify', url: '/verify'},
         {icon: <Info size={18}/>, label: 'About Us', url: '/about_us'},
+        
     ] : [
         {icon: <Info size={18}/>, label: 'About Us', url: '/about_us'},
     ];

@@ -7,6 +7,7 @@ import {signUpAuthApi} from "@/Features/SignUp/API/authApi.ts";
 import {signInAuthApi} from "@/Features/SignIn/API/authApi.ts";
 import {documentGetApi} from "@/Features/Docs/API/documentGetAPI.ts";
 import {documentTransferApi} from "@/Features/Transfer/API/TransferAPI.tsx";
+import {verifyApi} from "@/Features/Verify/API/VerifyAPI";
 
 const persistConfig = {
     key: 'root',
@@ -22,6 +23,7 @@ const store = configureStore({
         [documentApi.reducerPath]: documentApi.reducer,
         [documentGetApi.reducerPath]: documentGetApi.reducer,
         [documentTransferApi.reducerPath]: documentTransferApi.reducer,
+        [verifyApi.reducerPath]: verifyApi.reducer,
         auth: persistedAuthReducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -29,7 +31,14 @@ const store = configureStore({
             serializableCheck: {
                 ignoredActions: ['persist/PERSIST'],
             },
-        }).concat(signInAuthApi.middleware, signUpAuthApi.middleware, documentApi.middleware, documentGetApi.middleware, documentTransferApi.middleware), // Add the documentApi middleware
+        }).concat(
+            signInAuthApi.middleware,
+            signUpAuthApi.middleware,
+            documentApi.middleware,
+            documentGetApi.middleware,
+            documentTransferApi.middleware,
+            verifyApi.middleware
+        ),
 });
 
 const persistor = persistStore(store);
